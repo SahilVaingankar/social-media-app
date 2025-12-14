@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { setTimeout } from "timers/promises";
 
 type Body = {
   email?: string;
@@ -16,6 +17,9 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
+
+    await setTimeout(2000);
+    console.log("waiting...");
 
     // TODO: Replace this block with real database lookup and password verification
     // Example: find user by email, verify password with bcrypt, return session/token
