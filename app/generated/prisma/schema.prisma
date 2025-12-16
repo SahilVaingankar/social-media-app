@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * ======================
+ * USER MODEL
+ * ======================
+ */
+model User {
+  id           String @id @default(uuid())
+  email        String @unique
+  username     String @unique
+  passwordHash String
+
+  isAccountVerified Boolean  @default(false)
+  type              UserType @default(NORMAL)
+
+  avatarUrl String?
+  bio       String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastActiveAt DateTime? // ← last seen (UX only)
+
+  devices Device[]
+  otps    Otp[]
+}
+
+/**
+ * ======================
+ * OTP MODEL
+ * ======================
+ * - Handles both verification & password reset
+ * - Keeps sensitive OTP data out of User table
+ */
+model Otp {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash   String
+  type       OtpType
+  expiresAt  DateTime
+  consumedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/**
+ * ======================
+ * DEVICE / SESSION MODEL
+ * ======================
+ * - One row per logged-in device
+ * - Refresh-token–based auth
+ */
+model Device {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  refreshToken String  @unique
+  deviceId     String
+  userAgent    String?
+  ipAddress    String?
+
+  lastUsedAt DateTime @updatedAt
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/**
+ * ======================
+ * ENUMS
+ * ======================
+ */
+enum OtpType {
+  ACCOUNT_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum UserType {
+  NORMAL
+  PRO
+}

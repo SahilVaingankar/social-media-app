@@ -3,16 +3,19 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-import { loginSchema } from "@/lib/validators/auth";
-import { setAuthCookies } from "@/lib/auth/cookies";
 import { prisma } from "@/lib/prisma";
+import { setAuthCookies } from "@/lib/auth/cookies";
 import { transporter } from "@/lib/mail";
+import { signupSchema } from "@/lib/validators/auth";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    /**
+     * Validate input
+     */
 
-    const { error, value } = loginSchema.validate(body);
+    const { error, value } = signupSchema.validate(body);
     if (error) {
       return NextResponse.json(
         { success: false, message: error.message },
@@ -20,40 +23,45 @@ export async function POST(req: Request) {
       );
     }
 
-    const { email, password } = value;
+    const { username, email, password } = value;
 
     /**
-     * Fetch user
+     * Check existing user
      */
-    const user = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email },
+      select: { id: true },
+    });
+
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, message: "User already exists, please login" },
+        { status: 409 }
+      );
+    }
+
+    /**
+     * Hash password
+     */
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    /**
+     * Create user
+     */
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email,
+        passwordHash,
+      },
       select: {
         id: true,
         email: true,
-        passwordHash: true,
       },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
-
     /**
-     * Verify password
-     */
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) {
-      return NextResponse.json(
-        { success: false, message: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
-
-    /**
-     * Tokens
+     * AUTO LOGIN
      */
     const refreshToken = jwt.sign(
       { id: user.id },
@@ -67,11 +75,11 @@ export async function POST(req: Request) {
       { expiresIn: "15m" }
     );
 
-    /**
-     * Device tracking
-     */
     const deviceId = uuidv4();
 
+    /**
+     * Store device
+     */
     await prisma.device.create({
       data: {
         deviceId,
@@ -79,7 +87,7 @@ export async function POST(req: Request) {
         userAgent: req.headers.get("user-agent"),
         ipAddress: req.headers.get("x-forwarded-for") ?? "unknown",
         userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       },
     });
 
@@ -89,23 +97,26 @@ export async function POST(req: Request) {
     setAuthCookies({ deviceId, accessToken });
 
     /**
-     * Email notification (non-blocking)
+     * Welcome email (non-blocking)
      */
     transporter
       .sendMail({
         from: process.env.SENDER_EMAIL,
         to: user.email,
-        subject: "New Login Detected",
-        html: `<p>A new device logged into your account.</p>`,
+        subject: "Welcome to E-commerce website",
+        html: `<h1>Welcome to E-commerce website. Your account has been created with email id: ${user.email}</h1>`,
       })
       .catch(console.error);
 
     return NextResponse.json(
-      { success: true, message: "Login successful" },
-      { status: 200 }
+      {
+        success: true,
+        message: "Registration and login successful",
+      },
+      { status: 201 }
     );
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { success: false, message: "Internal server error" },
       { status: 500 }

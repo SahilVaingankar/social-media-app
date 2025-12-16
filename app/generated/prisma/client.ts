@@ -39,4 +39,28 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
-
+/**
+ * Model User
+ * ======================
+ *   USER MODEL
+ *   ======================
+ */
+export type User = Prisma.UserModel
+/**
+ * Model Otp
+ * ======================
+ *   OTP MODEL
+ *   ======================
+ *   - Handles both verification & password reset
+ *   - Keeps sensitive OTP data out of User table
+ */
+export type Otp = Prisma.OtpModel
+/**
+ * Model Device
+ * ======================
+ *   DEVICE / SESSION MODEL
+ *   ======================
+ *   - One row per logged-in device
+ *   - Refresh-token–based auth
+ */
+export type Device = Prisma.DeviceModel

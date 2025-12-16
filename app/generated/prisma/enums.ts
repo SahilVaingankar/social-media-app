@@ -9,7 +9,17 @@
 * 🟢 You can import this file directly.
 */
 
+export const OtpType = {
+  ACCOUNT_VERIFICATION: 'ACCOUNT_VERIFICATION',
+  PASSWORD_RESET: 'PASSWORD_RESET'
+} as const
+
+export type OtpType = (typeof OtpType)[keyof typeof OtpType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UserType = {
+  NORMAL: 'NORMAL',
+  PRO: 'PRO'
+} as const
+
+export type UserType = (typeof UserType)[keyof typeof UserType]

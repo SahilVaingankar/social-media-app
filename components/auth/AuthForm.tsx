@@ -11,19 +11,26 @@ import fetcher from "@/lib/api/fetcher";
 
 type Type = "login" | "signup";
 
-const signupSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.email("Please enter a valid email"),
-  password: z
+// Username: letters, numbers, underscores, dots; 3-30 chars
+const usernamePattern = /^[a-zA-Z0-9_.]+$/;
+
+export const signupSchema = z.object({
+  username: z
     .string()
-    .min(6, "Password must be at least 6 characters")
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username cannot exceed 30 characters")
     .regex(
-      /^[^'"%\\;]+$/,
-      "Password contains forbidden characters (^,',\",%,\\,;,$) — these characters are not allowed"
+      usernamePattern,
+      "Username can only contain letters, numbers, underscores, and dots"
     ),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
-const loginSchema = signupSchema.pick({ email: true, password: true });
+export const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 type SignupData = z.infer<typeof signupSchema>;
 type LoginData = z.infer<typeof loginSchema>;
@@ -44,7 +51,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
     setLoading(true);
     try {
       const endpoint =
-        type === "login" ? "/api/auth/login" : "/api/auth/register";
+        type === "login" ? "/api/auth/login" : "/api/auth/signup";
       const result = await fetcher(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,8 +84,8 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
             <div>
               <label className="block text-sm font-medium">Name</label>
               <input
-                {...register("name" as const)}
-                name="name"
+                {...register("username" as const)}
+                name="username"
                 type="text"
                 className="mt-1 block w-full rounded border border-green-700 px-3 py-2 focus:outline outline-green-500"
               />

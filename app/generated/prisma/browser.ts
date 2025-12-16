@@ -17,4 +17,28 @@ import * as Prisma from './internal/prismaNamespaceBrowser'
 export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
-
+/**
+ * Model User
+ * ======================
+ *   USER MODEL
+ *   ======================
+ */
+export type User = Prisma.UserModel
+/**
+ * Model Otp
+ * ======================
+ *   OTP MODEL
+ *   ======================
+ *   - Handles both verification & password reset
+ *   - Keeps sensitive OTP data out of User table
+ */
+export type Otp = Prisma.OtpModel
+/**
+ * Model Device
+ * ======================
+ *   DEVICE / SESSION MODEL
+ *   ======================
+ *   - One row per logged-in device
+ *   - Refresh-token–based auth
+ */
+export type Device = Prisma.DeviceModel
