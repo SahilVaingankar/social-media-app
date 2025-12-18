@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { setAuthCookies } from "@/lib/auth/cookies";
 import { transporter } from "@/lib/mail";
 import { signupSchema } from "@/lib/validators/auth";
+import { WELCOME_TEMPLATE } from "@/email/templates/welcome";
 
 export async function POST(req: Request) {
   try {
@@ -103,8 +104,8 @@ export async function POST(req: Request) {
       .sendMail({
         from: process.env.SENDER_EMAIL,
         to: user.email,
-        subject: "Welcome to E-commerce website",
-        html: `<h1>Welcome to E-commerce website. Your account has been created with email id: ${user.email}</h1>`,
+        subject: "Welcome to social-media-application",
+        html: WELCOME_TEMPLATE.replace("{{email}}", user.email),
       })
       .catch(console.error);
 

@@ -6,5 +6,5 @@ export const EMAIL_VERIFY_TEMPLATE = `<div style="font-family: Arial, sans-serif
       <p>This code is valid for a limited time. Please do not share it with anyone.</p>
       <p>If you did not request this, you can safely ignore this email.</p>
       <br>
-      <p>Best regards,<br><strong>[Your Company Name]</strong></p>
+      <p>Best regards,<br><strong>social-media-application</strong></p>
     </div>`;

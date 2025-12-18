@@ -83,7 +83,7 @@ model Device {
 
   createdAt DateTime @default(now())
 
-  @@index([userId])
+  @@unique([userId, deviceId])
   @@index([expiresAt])
 }
 

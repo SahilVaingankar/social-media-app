@@ -7,6 +7,8 @@ import { loginSchema } from "@/lib/validators/auth";
 import { setAuthCookies } from "@/lib/auth/cookies";
 import { prisma } from "@/lib/prisma";
 import { transporter } from "@/lib/mail";
+import { LOGIN_ALERT_TEMPLATE } from "@/email/templates/login-alart";
+import { UAParser } from "ua-parser-js";
 
 export async function POST(req: Request) {
   try {
@@ -91,12 +93,40 @@ export async function POST(req: Request) {
     /**
      * Email notification (non-blocking)
      */
+
+    const userAgent = req.headers.get("user-agent") ?? "Unknown device";
+
+    // Parse device name
+    const parser = new UAParser(userAgent);
+    const ua = parser.getResult();
+
+    const deviceLabel = `${ua.browser.name ?? "Browser"} · ${
+      ua.os.name ?? "OS"
+    }`;
+
+    // Geo-IP lookup (for testing)
+    async function getLocationFromIp(ip: string | null) {
+      if (!ip) return "Unknown location";
+
+      try {
+        const res = await fetch(`https://ipapi.co/${ip}/json/`);
+        const data = await res.json();
+
+        if (data.error) return "Unknown location";
+
+        return `${data.region ?? "Unknown state"}, ${data.country_name ?? ""}`;
+      } catch {
+        return "Unknown location";
+      }
+    }
+
+    // Send email using same in-memory data
     transporter
       .sendMail({
         from: process.env.SENDER_EMAIL,
         to: user.email,
         subject: "New Login Detected",
-        html: `<p>A new device logged into your account.</p>`,
+        html: LOGIN_ALERT_TEMPLATE.replace("{{device}}", deviceLabel),
       })
       .catch(console.error);
 
