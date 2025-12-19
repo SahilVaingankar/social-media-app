@@ -7,38 +7,21 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { toast } from "react-toastify";
-import fetcher from "@/lib/api/fetcher";
+import {
+  LoginData,
+  loginSchema,
+  SignupData,
+  signupSchema,
+} from "@/lib/validators/auth";
+import { loginAction } from "@/app/server-actions/auth/loginAction";
+import { signupAction } from "@/app/server-actions/auth/signupAction";
 
 type Type = "login" | "signup";
-
-// Username: letters, numbers, underscores, dots; 3-30 chars
-const usernamePattern = /^[a-zA-Z0-9_.]+$/;
-
-export const signupSchema = z.object({
-  username: z
-    .string()
-    .min(3, "Username must be at least 3 characters")
-    .max(30, "Username cannot exceed 30 characters")
-    .regex(
-      usernamePattern,
-      "Username can only contain letters, numbers, underscores, and dots"
-    ),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-export const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-type SignupData = z.infer<typeof signupSchema>;
-type LoginData = z.infer<typeof loginSchema>;
 
 export default function AuthForm({ type = "login" }: { type?: Type }) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const [serverError, setServerError] = useState<boolean>(false);
+  const [serverError, setServerError] = useState<string | null>(null); // ✅ changed to string
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { register, handleSubmit, formState } = useForm<SignupData | LoginData>(
@@ -47,16 +30,23 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
     }
   );
 
-  const onSubmit = async (data: SignupData | LoginData) => {
+  const onSubmit = async (data: any) => {
     setLoading(true);
+    setServerError(null); // ✅ reset error
     try {
-      const endpoint =
-        type === "login" ? "/api/auth/login" : "/api/auth/signup";
-      const result = await fetcher(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      let result;
+      if (type === "login") {
+        result = await loginAction(data); // ✅ call Server Action
+      } else {
+        result = await signupAction(data); // ✅ call Server Action
+      }
+
+      if (!result.success) {
+        setServerError(result.message); // ✅ display server error from action
+        toast.error(result.message);
+        return;
+      }
+
       router.push("/");
       toast.success(
         type === "login"
@@ -64,7 +54,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
           : "Account created successfully!"
       );
     } catch (err: any) {
-      setServerError(true);
+      setServerError(err?.message || "An error occurred"); // ✅ keep catch
       toast.error(err?.message || "An error occurred");
     } finally {
       setLoading(false);
