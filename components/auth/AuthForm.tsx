@@ -3,7 +3,6 @@
 import { Activity, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { toast } from "react-toastify";
@@ -13,8 +12,8 @@ import {
   SignupData,
   signupSchema,
 } from "@/lib/validators/auth";
-import { loginAction } from "@/app/server-actions/auth/loginAction";
-import { signupAction } from "@/app/server-actions/auth/signupAction";
+import { loginAction } from "@/app/actions/auth/loginAction";
+import { signupAction } from "@/app/actions/auth/signupAction";
 
 type Type = "login" | "signup";
 
