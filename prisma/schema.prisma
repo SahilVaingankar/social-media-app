@@ -50,7 +50,7 @@ model User {
   updatedAt           DateTime @updatedAt
   lastActiveAt     DateTime? // ← last seen (UX only)
 
-  accounts            Accounts[]
+  accounts            Account[]
   session             Session[]
 
   posts               Post[]
@@ -175,3 +175,6 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+
+
