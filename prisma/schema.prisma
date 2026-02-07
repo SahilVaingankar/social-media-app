@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/*
+  ======================
+  ENUMS
+  ======================
+*/
+enum OtpType {
+  ACCOUNT_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum UserType {
+  NORMAL
+  PRO
+}
+
+/*
+  ======================
+  USER MODEL
+  ======================
+*/
+model User {
+  id                  String   @id @default(cuid())
+  email               String   @unique
+  username            String   @unique
+  passwordHash        String
+
+  isAccountVerified   Boolean  @default(false)
+  emailVerified       DateTime?
+  type      UserType  @default(NORMAL)
+
+  avatarUrl           String?
+  bio                 String?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  lastActiveAt     DateTime? // ← last seen (UX only)
+
+  accounts            Account[]
+  session             Session[]
+
+  posts               Post[]
+  likes               Like[]
+  comments            Comment[]
+
+  followers           Follows[] @relation("UserFollowers") // People following this user
+  following           Follows[] @relation("UserFollowing") // People this user follows
+  otps                Otp[]
+
+}
+
+/*
+  ======================
+  OTP MODEL
+  ======================
+  - Handles both verification & password reset
+  - Keeps sensitive OTP data out of User table
+*/
+model Otp {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codeHash    String
+  type        OtpType
+  expiresAt   DateTime
+  consumedAt  DateTime?
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+/*
+  ======================
+  ACCOUNT
+  ======================
+*/
+model Account {
+  id                      String   @id @default(cuid())
+  userId                  String
+  type                    String
+  provider                String
+  providerAccountId       String
+  refreshToken            String?  @db.Text
+  accessToken             String?  @db.Text
+  expiresAt               Int? 
+  tokenType               String?
+  scope                   String?
+  idToken                 String?  @db.Text
+  sessionState            String?  @db.Text
+
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider,providerAccountId])
+}
+
+/*
+  ======================
+  SESSION MODEL
+  ======================
+*/
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime // Auth.js specifically looks for "expires"
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// --- SOCIAL FEATURES ---
+
+model Post {
+  id        String    @id @default(cuid())
+  mediaUrl  String    // URL to the image/video stored in your cloud service
+  mediaType String    @default("image") // To distinguish between images and videos
+  caption   String?   @db.Text
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  likes     Like[]
+  comments  Comment[]
+  createdAt DateTime  @default(now())
+}
+
+model Like {
+  userId    String
+  postId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // A composite ID means a user can only like a specific post once.
+  @@id([userId, postId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  userId    String
+  postId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+// The "Follows" table is a Join Table for the User-to-User relationship.
+model Follows {
+  followerId  String
+  followingId String
+  follower    User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+  @@id([followerId, followingId])
+}
+
+// For your manual Password Reset flow
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+
+
