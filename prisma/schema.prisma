@@ -36,6 +36,7 @@ enum UserType {
 model User {
   id                  String   @id @default(cuid())
   email               String   @unique
+  user                String 
   username            String   @unique
   passwordHash        String
 
@@ -59,7 +60,10 @@ model User {
 
   followers           Follows[] @relation("UserFollowers") // People following this user
   following           Follows[] @relation("UserFollowing") // People this user follows
+
   otps                Otp[]
+
+  loginActivities     LoginActivity[]
 
 }
 
@@ -108,6 +112,19 @@ model Account {
   user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider,providerAccountId])
+}
+
+model LoginActivity {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  ipAddress   String?
+  userAgent   String?
+  device      String?   // e.g. "Chrome on Windows"
+  location    String?   // e.g. "Mumbai, IN"
+
+  createdAt   DateTime @default(now())
 }
 
 /*
