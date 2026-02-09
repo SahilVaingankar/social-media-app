@@ -36,7 +36,6 @@ enum UserType {
 model User {
   id                  String   @id @default(cuid())
   email               String   @unique
-  user                String 
   username            String   @unique
   passwordHash        String
 
@@ -125,6 +124,7 @@ model LoginActivity {
   location    String?   // e.g. "Mumbai, IN"
 
   createdAt   DateTime @default(now())
+  @@index([userId])
 }
 
 /*
