@@ -8,6 +8,7 @@ import { transporter } from "@/lib/mail";
 // import { LOGIN_ALERT_TEMPLATE } from "@/email/templates/login-alart";
 import { headers } from "next/headers";
 import { LOGIN_ALERT_TEMPLATE } from "@/email/templates/login-alart";
+import { AuthError } from "next-auth";
 // import { LOGIN_ALERT_TEMPLATE } from "@email/templates/login-alart";
 
 export async function loginAction(body: unknown) {
@@ -34,13 +35,6 @@ export async function loginAction(body: unknown) {
       password,
       redirect: false,
     });
-
-    if (!res || res.error) {
-      return {
-        success: false,
-        message: "Invalid email or password",
-      };
-    }
 
     /**
      * 3️⃣ Fetch user id (for tracking)
@@ -71,6 +65,12 @@ export async function loginAction(body: unknown) {
 
     // Optional: location (can integrate with geoIP service later)
     const location = "Unknown"; // placeholder
+
+    console.log("PRISMA CHECK:", {
+      hasUser: !!prisma.user,
+      hasActivity: !!prisma.loginActivity,
+      allModels: Object.keys(prisma),
+    });
 
     await prisma.loginActivity.create({
       data: {
@@ -107,6 +107,14 @@ export async function loginAction(body: unknown) {
     };
   } catch (err) {
     console.error(err);
+    if (err instanceof AuthError) {
+      if (err.type === "CredentialsSignin") {
+        return {
+          success: false,
+          message: "Invalid email or password",
+        };
+      }
+    }
     return {
       success: false,
       message: "Internal server error",

@@ -48,26 +48,11 @@ export async function signupAction(body: unknown) {
       },
     });
 
-    console.log("PRISMA CHECK:", {
-      hasUser: !!prisma.user,
-      hasActivity: !!prisma.loginActivity,
-      allModels: Object.keys(prisma),
-    });
-
-    // 6️⃣ Device tracking
-    const hdrs = await headers();
-    const userAgent = hdrs.get("user-agent") ?? "Unknown device";
-    const ipAddress = hdrs.get("x-forwarded-for") ?? "unknown";
-    const deviceId = uuidv4();
-
-    await prisma.loginActivity.create({
-      data: {
-        deviceId,
-        userAgent,
-        ipAddress,
-        userId: user.id,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      },
+    // 🔐 Auto-login (creates session)
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
     });
 
     // 8️⃣ Welcome email (non-blocking)

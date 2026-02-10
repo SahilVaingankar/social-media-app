@@ -41,6 +41,11 @@ export type Otp = Prisma.OtpModel
  */
 export type Account = Prisma.AccountModel
 /**
+ * Model LoginActivity
+ * 
+ */
+export type LoginActivity = Prisma.LoginActivityModel
+/**
  * Model Session
  * ======================
  *   SESSION MODEL

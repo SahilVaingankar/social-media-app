@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Otp: 'Otp',
   Account: 'Account',
+  LoginActivity: 'LoginActivity',
   Session: 'Session',
   Post: 'Post',
   Like: 'Like',
@@ -125,6 +126,19 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const LoginActivityScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  device: 'device',
+  location: 'location',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginActivityScalarFieldEnum = (typeof LoginActivityScalarFieldEnum)[keyof typeof LoginActivityScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {

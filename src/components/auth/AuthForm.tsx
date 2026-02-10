@@ -37,23 +37,14 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
       if (type === "login") {
         result = await loginAction(data); // ✅ call Server Action
       } else {
-        result = await signupAction(data);
-        if (result.success) {
-          toast.info("Account created! Logging you in...");
-          const loginResult = await loginAction(data); // Auto-login
-
-          if (!loginResult.success) {
-            setServerError(loginResult.message);
-            return;
-          }
-        } // ✅ call Server Action
+        result = await signupAction(data); // ✅ call Server Action
       }
 
-      // if (!result.success) {
-      //   setServerError(result.message); // ✅ display server error from action
-      //   toast.error(result.message);
-      //   return;
-      // }
+      if (!result.success) {
+        setServerError(result.message); // ✅ display server error from action
+        toast.error(result.message);
+        return;
+      }
 
       router.push("/");
       toast.success(
