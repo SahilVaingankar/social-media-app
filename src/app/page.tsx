@@ -1,8 +1,22 @@
-import Image from "next/image";
+// import Image from "next/image";
 
-export default function Home() {
-  const user = { user: { email: "user@example.com" } }; // Replace with actual user data fetching logic
+// export default function Home() {
+//   const user = { user: { email: "user@example.com" } }; // Replace with actual user data fetching logic
+//   return (
+//     <div className="inline">{user.user?.email ?? "User not logged in"}</div>
+//   );
+// }
+
+import { auth } from "@/auth";
+
+export default async function Home() {
+  const session = await auth();
+
   return (
-    <div className="inline">{user.user?.email ?? "User not logged in"}</div>
+    <div>
+      {session?.user?.email ?? "User not logged in"}
+      <br />
+      {session?.user?.username ?? "No username"}
+    </div>
   );
 }
