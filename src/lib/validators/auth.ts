@@ -61,12 +61,23 @@ export const signupSchema = z.object({
     .max(30, "Username cannot exceed 30 characters")
     .regex(
       usernamePattern,
-      "Username can only contain letters, numbers, underscores, and dots"
+      "Username can only contain letters, numbers, underscores, and dots",
     ),
 
-  email: z.string().email("Please enter a valid email"),
+  email: z.email("Please enter a valid email"),
 
   password: z.string().min(8, "Password must be at least 8 characters"),
+
+  name: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username cannot exceed 30 characters")
+    .regex(
+      usernamePattern,
+      "Username can only contain letters, numbers, underscores, and dots",
+    ),
+  bio: z.string().max(125).optional(),
+  avatar: z.any().optional(), // or custom refine for File
 });
 
 export const loginSchema = z.object({

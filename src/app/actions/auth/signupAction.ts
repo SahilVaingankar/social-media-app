@@ -19,7 +19,7 @@ export async function signupAction(body: unknown) {
     return { success: false, message: result.error.issues[0].message };
   }
 
-  const { username, email, password } = result.data;
+  const { username, email, password, name, bio } = result.data;
 
   try {
     // 2️⃣ Check if user exists
