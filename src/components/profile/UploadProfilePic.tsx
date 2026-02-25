@@ -64,6 +64,8 @@
 //   );
 // }
 
+// ok i remmember it now, selectedImage is selected image on childern its cleanup is handled on child the cropped image is handled by react-easy-crop the we pass that croped image to parent handle creation and deletion and cleanup on parent as we need to clean it up onSubmit which exixsts on the parent  and pass the blob to child then i set its returned value to setDisplayImage state to use it on children for UI
+
 import {
   Avatar,
   AvatarBadge,
@@ -73,22 +75,24 @@ import {
 import { CameraIcon } from "lucide-react";
 import Cropper from "react-easy-crop";
 import { useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 type Props = {
   initialImage?: string;
   onImageSelect?: (file: File) => Promise<string>;
   size?: number;
-  register: any;
+  // register: any;
 };
 
 export function UploadProfilePic({
   initialImage = "/vercel.svg",
   onImageSelect,
-  register,
   size = 96,
 }: Props) {
-  const [preview, setPreview] = useState<string>(initialImage);
-  const [rawImage, setRawImage] = useState<string>("");
+  const { register, setValue } = useFormContext();
+  const avatarInput = register("avatarUrl" as const);
+  const [displayImage, setDisplayImage] = useState<string>(initialImage);
+  const [selectedImage, setSelectedImage] = useState<string>("");
   const [open, setOpen] = useState(false);
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -97,16 +101,17 @@ export function UploadProfilePic({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Cleanup preview URLs
+  // Cleanup displayImage URLs
   useEffect(() => {
     return () => {
-      if (rawImage.startsWith("blob:")) {
-        URL.revokeObjectURL(rawImage);
+      if (selectedImage.startsWith("blob:")) {
+        URL.revokeObjectURL(selectedImage);
       }
     };
-  }, [preview, rawImage]);
+  }, [displayImage, selectedImage]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    avatarInput.onChange(e);
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -116,7 +121,7 @@ export function UploadProfilePic({
     }
 
     const objectUrl = URL.createObjectURL(file);
-    setRawImage(objectUrl);
+    setSelectedImage(objectUrl);
     setOpen(true);
   };
 
@@ -125,10 +130,10 @@ export function UploadProfilePic({
   };
 
   const getCroppedImage = async () => {
-    if (!rawImage || !croppedAreaPixels) return;
+    if (!selectedImage || !croppedAreaPixels) return;
 
     const image = new Image();
-    image.src = rawImage;
+    image.src = selectedImage;
 
     await new Promise((resolve) => {
       image.onload = resolve;
@@ -169,15 +174,21 @@ export function UploadProfilePic({
     const croppedFile = await getCroppedImage();
     if (!croppedFile) return;
 
-    // const objectUrl = await onImageSelect(croppedFile);
-    // setPreview(objectUrl);
-    // setOpen(false);
+    // Keep the cropped file in react-hook-form submit payload
+    setValue("avatarUrl", croppedFile, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
 
     if (onImageSelect) {
       const objectUrl = await onImageSelect(croppedFile);
-      setPreview(objectUrl);
-      setOpen(false);
+      setDisplayImage(objectUrl);
+    } else {
+      const objectUrl = URL.createObjectURL(croppedFile);
+      setDisplayImage(objectUrl);
     }
+    setOpen(false);
   };
 
   return (
@@ -187,7 +198,7 @@ export function UploadProfilePic({
         <Avatar
           className="overflow-hidden"
           style={{ width: size, height: size }}>
-          <AvatarImage src={preview} />
+          <AvatarImage src={displayImage} />
           <AvatarFallback>PP</AvatarFallback>
         </Avatar>
 
@@ -198,9 +209,9 @@ export function UploadProfilePic({
         </AvatarBadge>
 
         <input
-          {...register("profilePic")}
+          {...avatarInput}
           ref={(e) => {
-            register("profilePic").ref(e);
+            avatarInput.ref(e);
             fileInputRef.current = e;
           }}
           type="file"
@@ -211,12 +222,12 @@ export function UploadProfilePic({
       </div>
 
       {/* Crop Modal */}
-      {open && rawImage && (
+      {open && selectedImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
           <div className="bg-white p-4 rounded-xl w-100">
             <div className="relative h-75 w-full">
               <Cropper
-                image={rawImage}
+                image={selectedImage}
                 crop={crop}
                 zoom={zoom}
                 aspect={1}

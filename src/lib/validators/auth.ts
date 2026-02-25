@@ -53,6 +53,13 @@ import { z } from "zod";
 
 // Username: letters, numbers, underscores, dots; 3–30 chars
 const usernamePattern = /^[a-zA-Z0-9_.]+$/;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export const signupSchema = z.object({
   username: z
@@ -77,7 +84,17 @@ export const signupSchema = z.object({
       "Username can only contain letters, numbers, underscores, and dots",
     ),
   bio: z.string().max(125).optional(),
-  avatar: z.any().optional(), // or custom refine for File
+  avatarUrl: z
+    .instanceof(File)
+    .optional()
+    .refine(
+      (file) => !file || file.size <= MAX_FILE_SIZE,
+      "Max image size is 5MB.",
+    )
+    .refine(
+      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported.",
+    ),
 });
 
 export const loginSchema = z.object({

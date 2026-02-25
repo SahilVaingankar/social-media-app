@@ -19,7 +19,7 @@ export async function signupAction(body: unknown) {
     return { success: false, message: result.error.issues[0].message };
   }
 
-  const { username, email, password, name, bio } = result.data;
+  const { username, email, password, name, bio, avatarUrl } = result.data;
 
   try {
     // 2️⃣ Check if user exists
@@ -41,6 +41,9 @@ export async function signupAction(body: unknown) {
         username,
         email,
         passwordHash,
+        name,
+        bio,
+        avatarUrl: avatarUrl ? avatarUrl.name : null,
       },
       select: {
         id: true,
