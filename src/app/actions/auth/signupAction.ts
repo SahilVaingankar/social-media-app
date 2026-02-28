@@ -8,6 +8,7 @@ import { cookies, headers } from "next/headers";
 import { signupSchema } from "@/lib/validators/auth";
 import { transporter } from "@/lib/mail";
 import { WELCOME_TEMPLATE } from "@/email/templates/welcome";
+import cloudinary from "@/lib/cloudinary";
 // import { WELCOME_TEMPLATE } from "@/templates/welcome";
 // import { WELCOME_TEMPLATE } from "@/email/templates/welcome";
 
@@ -35,7 +36,38 @@ export async function signupAction(body: unknown) {
     // 3️⃣ Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // 4️⃣ Create user
+    // 4️⃣ Upload avatar to Cloudinary (if provided)
+    console.log(
+      "NEXT_PUBLIC_CLOUDINARY_API_KEY:",
+      process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+    );
+    let uploadedAvatarUrl: string | null = null;
+
+    if (avatarUrl) {
+      const bytes = await avatarUrl.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      const uploadResponse = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: "avatars",
+              transformation: [
+                { width: 300, height: 300, crop: "fill", gravity: "face" },
+              ],
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result);
+            },
+          )
+          .end(buffer);
+      });
+
+      uploadedAvatarUrl = uploadResponse.secure_url;
+    }
+
+    // 5 Create user
     const user = await prisma.user.create({
       data: {
         username,
@@ -43,7 +75,7 @@ export async function signupAction(body: unknown) {
         passwordHash,
         name,
         bio,
-        avatarUrl: avatarUrl ? avatarUrl.name : null,
+        avatarUrl: uploadedAvatarUrl ? uploadedAvatarUrl : null,
       },
       select: {
         id: true,
