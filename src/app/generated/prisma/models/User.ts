@@ -30,6 +30,7 @@ export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
   username: string | null
+  name: string | null
   passwordHash: string | null
   isAccountVerified: boolean | null
   emailVerified: Date | null
@@ -45,6 +46,7 @@ export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
   username: string | null
+  name: string | null
   passwordHash: string | null
   isAccountVerified: boolean | null
   emailVerified: Date | null
@@ -60,6 +62,7 @@ export type UserCountAggregateOutputType = {
   id: number
   email: number
   username: number
+  name: number
   passwordHash: number
   isAccountVerified: number
   emailVerified: number
@@ -77,6 +80,7 @@ export type UserMinAggregateInputType = {
   id?: true
   email?: true
   username?: true
+  name?: true
   passwordHash?: true
   isAccountVerified?: true
   emailVerified?: true
@@ -92,6 +96,7 @@ export type UserMaxAggregateInputType = {
   id?: true
   email?: true
   username?: true
+  name?: true
   passwordHash?: true
   isAccountVerified?: true
   emailVerified?: true
@@ -107,6 +112,7 @@ export type UserCountAggregateInputType = {
   id?: true
   email?: true
   username?: true
+  name?: true
   passwordHash?: true
   isAccountVerified?: true
   emailVerified?: true
@@ -195,6 +201,7 @@ export type UserGroupByOutputType = {
   id: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified: boolean
   emailVerified: Date | null
@@ -231,6 +238,7 @@ export type UserWhereInput = {
   id?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringFilter<"User"> | string
+  name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   isAccountVerified?: Prisma.BoolFilter<"User"> | boolean
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -248,12 +256,14 @@ export type UserWhereInput = {
   followers?: Prisma.FollowsListRelationFilter
   following?: Prisma.FollowsListRelationFilter
   otps?: Prisma.OtpListRelationFilter
+  loginActivities?: Prisma.LoginActivityListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   isAccountVerified?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -271,6 +281,7 @@ export type UserOrderByWithRelationInput = {
   followers?: Prisma.FollowsOrderByRelationAggregateInput
   following?: Prisma.FollowsOrderByRelationAggregateInput
   otps?: Prisma.OtpOrderByRelationAggregateInput
+  loginActivities?: Prisma.LoginActivityOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -280,6 +291,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   isAccountVerified?: Prisma.BoolFilter<"User"> | boolean
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -297,12 +309,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   followers?: Prisma.FollowsListRelationFilter
   following?: Prisma.FollowsListRelationFilter
   otps?: Prisma.OtpListRelationFilter
+  loginActivities?: Prisma.LoginActivityListRelationFilter
 }, "id" | "email" | "username">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   isAccountVerified?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -324,6 +338,7 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringWithAggregatesFilter<"User"> | string
+  name?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   isAccountVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -339,6 +354,7 @@ export type UserCreateInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -356,12 +372,14 @@ export type UserCreateInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -379,12 +397,14 @@ export type UserUncheckedCreateInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -402,12 +422,14 @@ export type UserUpdateInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -425,12 +447,14 @@ export type UserUncheckedUpdateInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -446,6 +470,7 @@ export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -461,6 +486,7 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -476,6 +502,7 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   isAccountVerified?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
@@ -491,6 +518,7 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   isAccountVerified?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
@@ -506,6 +534,7 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   isAccountVerified?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
@@ -572,6 +601,20 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   upsert?: Prisma.UserUpsertWithoutAccountsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+}
+
+export type UserCreateNestedOneWithoutLoginActivitiesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoginActivitiesInput, Prisma.UserUncheckedCreateWithoutLoginActivitiesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoginActivitiesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLoginActivitiesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoginActivitiesInput, Prisma.UserUncheckedCreateWithoutLoginActivitiesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoginActivitiesInput
+  upsert?: Prisma.UserUpsertWithoutLoginActivitiesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLoginActivitiesInput, Prisma.UserUpdateWithoutLoginActivitiesInput>, Prisma.UserUncheckedUpdateWithoutLoginActivitiesInput>
 }
 
 export type UserCreateNestedOneWithoutSessionInput = {
@@ -662,6 +705,7 @@ export type UserCreateWithoutOtpsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -678,12 +722,14 @@ export type UserCreateWithoutOtpsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOtpsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -700,6 +746,7 @@ export type UserUncheckedCreateWithoutOtpsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOtpsInput = {
@@ -722,6 +769,7 @@ export type UserUpdateWithoutOtpsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -738,12 +786,14 @@ export type UserUpdateWithoutOtpsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOtpsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -760,12 +810,14 @@ export type UserUncheckedUpdateWithoutOtpsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -782,12 +834,14 @@ export type UserCreateWithoutAccountsInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -804,6 +858,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -826,6 +881,7 @@ export type UserUpdateWithoutAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -842,12 +898,14 @@ export type UserUpdateWithoutAccountsInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -864,12 +922,126 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLoginActivitiesInput = {
+  id?: string
+  email: string
+  username: string
+  name: string
+  passwordHash: string
+  isAccountVerified?: boolean
+  emailVerified?: Date | string | null
+  type?: $Enums.UserType
+  avatarUrl?: string | null
+  bio?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastActiveAt?: Date | string | null
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  likes?: Prisma.LikeCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
+  otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLoginActivitiesInput = {
+  id?: string
+  email: string
+  username: string
+  name: string
+  passwordHash: string
+  isAccountVerified?: boolean
+  emailVerified?: Date | string | null
+  type?: $Enums.UserType
+  avatarUrl?: string | null
+  bio?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastActiveAt?: Date | string | null
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  session?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  likes?: Prisma.LikeUncheckedCreateNestedManyWithoutUserInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
+  following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
+  otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLoginActivitiesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoginActivitiesInput, Prisma.UserUncheckedCreateWithoutLoginActivitiesInput>
+}
+
+export type UserUpsertWithoutLoginActivitiesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLoginActivitiesInput, Prisma.UserUncheckedUpdateWithoutLoginActivitiesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoginActivitiesInput, Prisma.UserUncheckedCreateWithoutLoginActivitiesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLoginActivitiesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLoginActivitiesInput, Prisma.UserUncheckedUpdateWithoutLoginActivitiesInput>
+}
+
+export type UserUpdateWithoutLoginActivitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  likes?: Prisma.LikeUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
+  otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLoginActivitiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumUserTypeFieldUpdateOperationsInput | $Enums.UserType
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastActiveAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  session?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  likes?: Prisma.LikeUncheckedUpdateManyWithoutUserNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
+  following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
+  otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -886,12 +1058,14 @@ export type UserCreateWithoutSessionInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -908,6 +1082,7 @@ export type UserUncheckedCreateWithoutSessionInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionInput = {
@@ -930,6 +1105,7 @@ export type UserUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -946,12 +1122,14 @@ export type UserUpdateWithoutSessionInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -968,12 +1146,14 @@ export type UserUncheckedUpdateWithoutSessionInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPostsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -990,12 +1170,14 @@ export type UserCreateWithoutPostsInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPostsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1012,6 +1194,7 @@ export type UserUncheckedCreateWithoutPostsInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPostsInput = {
@@ -1034,6 +1217,7 @@ export type UserUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1050,12 +1234,14 @@ export type UserUpdateWithoutPostsInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPostsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1072,12 +1258,14 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLikesInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1094,12 +1282,14 @@ export type UserCreateWithoutLikesInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLikesInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1116,6 +1306,7 @@ export type UserUncheckedCreateWithoutLikesInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLikesInput = {
@@ -1138,6 +1329,7 @@ export type UserUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1154,12 +1346,14 @@ export type UserUpdateWithoutLikesInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLikesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1176,12 +1370,14 @@ export type UserUncheckedUpdateWithoutLikesInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCommentsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1198,12 +1394,14 @@ export type UserCreateWithoutCommentsInput = {
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCommentsInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1220,6 +1418,7 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCommentsInput = {
@@ -1242,6 +1441,7 @@ export type UserUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1258,12 +1458,14 @@ export type UserUpdateWithoutCommentsInput = {
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCommentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1280,12 +1482,14 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFollowingInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1302,12 +1506,14 @@ export type UserCreateWithoutFollowingInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   followers?: Prisma.FollowsCreateNestedManyWithoutFollowingInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowingInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1324,6 +1530,7 @@ export type UserUncheckedCreateWithoutFollowingInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   followers?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowingInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowingInput = {
@@ -1335,6 +1542,7 @@ export type UserCreateWithoutFollowersInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1351,12 +1559,14 @@ export type UserCreateWithoutFollowersInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   following?: Prisma.FollowsCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFollowersInput = {
   id?: string
   email: string
   username: string
+  name: string
   passwordHash: string
   isAccountVerified?: boolean
   emailVerified?: Date | string | null
@@ -1373,6 +1583,7 @@ export type UserUncheckedCreateWithoutFollowersInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   following?: Prisma.FollowsUncheckedCreateNestedManyWithoutFollowerInput
   otps?: Prisma.OtpUncheckedCreateNestedManyWithoutUserInput
+  loginActivities?: Prisma.LoginActivityUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFollowersInput = {
@@ -1395,6 +1606,7 @@ export type UserUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1411,12 +1623,14 @@ export type UserUpdateWithoutFollowingInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   followers?: Prisma.FollowsUpdateManyWithoutFollowingNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1433,6 +1647,7 @@ export type UserUncheckedUpdateWithoutFollowingInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   followers?: Prisma.FollowsUncheckedUpdateManyWithoutFollowingNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutFollowersInput = {
@@ -1450,6 +1665,7 @@ export type UserUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1466,12 +1682,14 @@ export type UserUpdateWithoutFollowersInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   following?: Prisma.FollowsUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFollowersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   isAccountVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1488,6 +1706,7 @@ export type UserUncheckedUpdateWithoutFollowersInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   following?: Prisma.FollowsUncheckedUpdateManyWithoutFollowerNestedInput
   otps?: Prisma.OtpUncheckedUpdateManyWithoutUserNestedInput
+  loginActivities?: Prisma.LoginActivityUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1504,6 +1723,7 @@ export type UserCountOutputType = {
   followers: number
   following: number
   otps: number
+  loginActivities: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1515,6 +1735,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   followers?: boolean | UserCountOutputTypeCountFollowersArgs
   following?: boolean | UserCountOutputTypeCountFollowingArgs
   otps?: boolean | UserCountOutputTypeCountOtpsArgs
+  loginActivities?: boolean | UserCountOutputTypeCountLoginActivitiesArgs
 }
 
 /**
@@ -1583,11 +1804,19 @@ export type UserCountOutputTypeCountOtpsArgs<ExtArgs extends runtime.Types.Exten
   where?: Prisma.OtpWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLoginActivitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoginActivityWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
   username?: boolean
+  name?: boolean
   passwordHash?: boolean
   isAccountVerified?: boolean
   emailVerified?: boolean
@@ -1605,6 +1834,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
+  loginActivities?: boolean | Prisma.User$loginActivitiesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1612,6 +1842,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   username?: boolean
+  name?: boolean
   passwordHash?: boolean
   isAccountVerified?: boolean
   emailVerified?: boolean
@@ -1627,6 +1858,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   username?: boolean
+  name?: boolean
   passwordHash?: boolean
   isAccountVerified?: boolean
   emailVerified?: boolean
@@ -1642,6 +1874,7 @@ export type UserSelectScalar = {
   id?: boolean
   email?: boolean
   username?: boolean
+  name?: boolean
   passwordHash?: boolean
   isAccountVerified?: boolean
   emailVerified?: boolean
@@ -1653,7 +1886,7 @@ export type UserSelectScalar = {
   lastActiveAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "passwordHash" | "isAccountVerified" | "emailVerified" | "type" | "avatarUrl" | "bio" | "createdAt" | "updatedAt" | "lastActiveAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "name" | "passwordHash" | "isAccountVerified" | "emailVerified" | "type" | "avatarUrl" | "bio" | "createdAt" | "updatedAt" | "lastActiveAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   session?: boolean | Prisma.User$sessionArgs<ExtArgs>
@@ -1663,6 +1896,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   followers?: boolean | Prisma.User$followersArgs<ExtArgs>
   following?: boolean | Prisma.User$followingArgs<ExtArgs>
   otps?: boolean | Prisma.User$otpsArgs<ExtArgs>
+  loginActivities?: boolean | Prisma.User$loginActivitiesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1679,11 +1913,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     followers: Prisma.$FollowsPayload<ExtArgs>[]
     following: Prisma.$FollowsPayload<ExtArgs>[]
     otps: Prisma.$OtpPayload<ExtArgs>[]
+    loginActivities: Prisma.$LoginActivityPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     username: string
+    name: string
     passwordHash: string
     isAccountVerified: boolean
     emailVerified: Date | null
@@ -2095,6 +2331,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   followers<T extends Prisma.User$followersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   following<T extends Prisma.User$followingArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$followingArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FollowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   otps<T extends Prisma.User$otpsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$otpsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OtpPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loginActivities<T extends Prisma.User$loginActivitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loginActivitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2127,6 +2364,7 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly username: Prisma.FieldRef<"User", 'String'>
+  readonly name: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly isAccountVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
@@ -2713,6 +2951,30 @@ export type User$otpsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.OtpScalarFieldEnum | Prisma.OtpScalarFieldEnum[]
+}
+
+/**
+ * User.loginActivities
+ */
+export type User$loginActivitiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoginActivity
+   */
+  select?: Prisma.LoginActivitySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoginActivity
+   */
+  omit?: Prisma.LoginActivityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoginActivityInclude<ExtArgs> | null
+  where?: Prisma.LoginActivityWhereInput
+  orderBy?: Prisma.LoginActivityOrderByWithRelationInput | Prisma.LoginActivityOrderByWithRelationInput[]
+  cursor?: Prisma.LoginActivityWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoginActivityScalarFieldEnum | Prisma.LoginActivityScalarFieldEnum[]
 }
 
 /**
