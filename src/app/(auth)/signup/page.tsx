@@ -15,8 +15,11 @@ export default function SignupPage() {
           </p>
         }>
         <header>
-          <h1 className="text-2xl font-semibold mb-4">Create a new account</h1>
+          <h1 className="text-2xl font-semibold text-center mb-2">
+            Signup Form
+          </h1>
         </header>
+        <p className="text-center mb-4 text-md">Create a new account</p>
         <AuthForm type="signup" />
       </AuthFormWrapper>
     </div>

@@ -15,6 +15,7 @@ import {
 import { loginAction } from "@/app/actions/auth/loginAction";
 import { signupAction } from "@/app/actions/auth/signupAction";
 import { UploadProfilePic } from "../profile/UploadProfilePic";
+import Link from "next/link";
 // import { ProfilePic } from "../ui/ProfilePic;
 
 type Type = "login" | "signup";
@@ -129,9 +130,10 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
                 mode={type === "signup" ? "visible" : "hidden"}
                 children={
                   <div>
-                    <label className="block text-sm font-medium">Name</label>
+                    <label className="block text-sm font-semibold">Name</label>
                     <input
                       {...methods.register("name" as const)}
+                      placeholder="Enter name"
                       name="name"
                       type="text"
                       className="mt-1 block w-full rounded border border-green-700 px-3 py-2 focus:outline outline-green-500"
@@ -153,8 +155,9 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
                 }
               />
               <div>
-                <label className="block text-sm font-medium">Email</label>
+                <label className="block text-sm font-semibold">Email</label>
                 <input
+                  placeholder="Enter email"
                   {...methods.register("email" as const)}
                   name="email"
                   type="email"
@@ -175,9 +178,10 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
                 />
               </div>
               <div className="relative">
-                <label className="text-sm font-medium">Password</label>
+                <label className="text-sm font-semibold">Password</label>
                 <input
                   {...methods.register("password" as const)}
+                  placeholder="Enter password"
                   name="password"
                   type={showPassword ? "text" : "password"}
                   className="mt-1 block w-full rounded border border-green-700 px-3 py-2 pr-10 focus:outline outline-green-500"
@@ -212,9 +216,10 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
 
           {currentStep === 2 && type === "signup" && (
             <>
-              <label className="block text-sm font-medium">Username</label>
+              <label className="block text-sm font-semibold">Username</label>
               <input
                 {...methods.register("username" as const)}
+                placeholder="Enter username"
                 name="username"
                 type="text"
                 className="mt-1 block w-full rounded border border-green-700 px-3 py-2 pr-10 focus:outline outline-green-500"
@@ -225,7 +230,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
           {currentStep >= 3 && type === "signup" && (
             <>
               <div className="w-full flex flex-col justify-center items-center my-4">
-                <p className="font-bold">App Profile</p>
+                <p className="font-semibold">App Profile</p>
                 <UploadProfilePic
                   onImageSelect={onImageSelect}
                   // register={methods.register}
@@ -235,15 +240,15 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
               <div className="relative">
                 <textarea
                   {...methods.register("bio" as const)}
+                  placeholder="Enter bio ...."
                   name="bio"
                   rows={4}
                   maxLength={125}
                   onChange={(e) => setBioWords(e.currentTarget.value.length)}
-                  placeholder=" "
                   className="peer w-full rounded-md border border-green-700 bg-transparent px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none"
                 />
 
-                <label className="absolute -top-3 left-5 bg-black px-1">
+                <label className="absolute -top-3 left-1.5 font-bold px-1 bg-black">
                   Bio
                 </label>
 
@@ -253,13 +258,20 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
               </div>{" "}
             </>
           )}
+          <Activity mode={type === "login" ? "visible" : "hidden"}>
+            <Link
+              href="/forgot-password"
+              className="text-md text-green-500 hover:text-green-300">
+              Forgot Password?
+            </Link>
+          </Activity>
 
           <Activity
             mode={serverError ? "visible" : "hidden"}
             children={<div className="text-sm text-red-300">{serverError}</div>}
           />
 
-          <div>
+          <div className="mt-4">
             <button
               // type="submit"
               type={currentStep === 4 ? "submit" : "button"}
@@ -267,7 +279,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
               // onClick={() => nextStep()}
               disabled={loading}
               aria-busy={loading}
-              className="w-full bg-green-700 text-black text-lg px-4 py-2 rounded cursor-pointer hover:bg-green-500 focus:bg-green-500 disabled:bg-green-300 disabled:cursor-not-allowed">
+              className="w-full bg-green-500 text-black text-lg px-4 py-2 rounded cursor-pointer hover:bg-green-600 focus:bg-green-600 disabled:bg-green-300 disabled:cursor-not-allowed">
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <Loader className="h-5 w-5 text-gray-900 animate-spin" />
