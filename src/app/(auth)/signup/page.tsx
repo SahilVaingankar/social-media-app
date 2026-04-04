@@ -9,7 +9,9 @@ export default function SignupPage() {
         footer={
           <p className="text-sm text-white text-center">
             Already have an account?{" "}
-            <Link href="/login" className="underline text-green-500">
+            <Link
+              href="/login"
+              className="underline text-green-500 hover:text-green-300">
               Log In
             </Link>
           </p>

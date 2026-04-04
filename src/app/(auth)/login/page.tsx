@@ -8,7 +8,9 @@ export default function LoginPage() {
       footer={
         <p className="text-sm text-white text-center">
           Don't have an account?{" "}
-          <Link href="/signup" className="underline text-green-500">
+          <Link
+            href="/signup"
+            className="underline text-green-500 hover:text-green-300">
             Sign Up
           </Link>
         </p>

@@ -84,17 +84,26 @@ export const signupSchema = z.object({
       "Username can only contain letters, numbers, underscores, and dots",
     ),
   bio: z.string().max(125).optional(),
-  avatarUrl: z
-    .instanceof(File)
-    .optional()
-    .refine(
-      (file) => !file || file.size <= MAX_FILE_SIZE,
-      "Max image size is 5MB.",
-    )
-    .refine(
-      (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported.",
-    ),
+  avatarUrl: z.preprocess(
+    (value) => {
+      if (typeof FileList !== "undefined" && value instanceof FileList) {
+        return value.item(0) ?? undefined;
+      }
+
+      return value;
+    },
+    z
+      .instanceof(File)
+      .optional()
+      .refine(
+        (file) => !file || file.size <= MAX_FILE_SIZE,
+        "Max image size is 5MB.",
+      )
+      .refine(
+        (file) => !file || ACCEPTED_IMAGE_TYPES.includes(file.type),
+        "Only .jpg, .jpeg, .png and .webp formats are supported.",
+      ),
+  ),
 });
 
 export const loginSchema = z.object({

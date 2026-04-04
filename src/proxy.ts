@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-const publicRoutes = new Set(["/403"]);
+const publicRoutes = new Set(["/403", "/reset-password"]);
 const authRoutes = new Set(["/login", "/signup"]);
 
 export default auth((req) => {
