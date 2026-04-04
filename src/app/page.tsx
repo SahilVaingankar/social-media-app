@@ -30,7 +30,7 @@ export default function Home() {
       const res = await fetch("/api/user");
 
       if (!res.ok) {
-        console.error("Failed to fetch user");
+        console.log("Failed to fetch user");
         return;
       }
 

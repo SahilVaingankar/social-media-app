@@ -79,7 +79,7 @@ import { useFormContext } from "react-hook-form";
 
 type Props = {
   initialImage?: string;
-  onImageSelect?: (file: File) => Promise<string>;
+  onImageSelect: (file: File) => Promise<string>;
   size?: number;
   // register: any;
 };
@@ -181,13 +181,8 @@ export function UploadProfilePic({
       shouldValidate: true,
     });
 
-    if (onImageSelect) {
-      const objectUrl = await onImageSelect(croppedFile);
-      setDisplayImage(objectUrl);
-    } else {
-      const objectUrl = URL.createObjectURL(croppedFile);
-      setDisplayImage(objectUrl);
-    }
+    const objectUrl = await onImageSelect(croppedFile);
+    setDisplayImage(objectUrl);
     setOpen(false);
   };
 
