@@ -23,6 +23,11 @@ enum OtpType {
   PASSWORD_RESET
 }
 
+enum tokenType {
+  ACCOUNT_VERIFICATION
+  PASSWORD_RESET
+}
+
 enum UserType {
   NORMAL
   PRO
@@ -49,7 +54,7 @@ model User {
 
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
-  lastActiveAt     DateTime? // ← last seen (UX only)
+  lastActiveAt        DateTime? // ← last seen (UX only)
 
   accounts            Account[]
   session             Session[]
@@ -62,6 +67,9 @@ model User {
   following           Follows[] @relation("UserFollowing") // People this user follows
 
   otps                Otp[]
+  authToken           AuthToken[]
+
+  otpBlockedUntil     DateTime?
 
   loginActivities     LoginActivity[]
 
@@ -81,6 +89,8 @@ model Otp {
 
   codeHash    String
   type        OtpType
+  attempts    Int       @default(0)
+
   expiresAt   DateTime
   consumedAt  DateTime?
 
@@ -88,6 +98,25 @@ model Otp {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+/*AUTH TOKEN TABLE*/
+model AuthToken {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash    String
+  type        tokenType
+  expiresAt   DateTime
+
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([tokenHash])
+
+  @@unique([userId,type])
 }
 
 /*

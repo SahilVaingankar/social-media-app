@@ -55,7 +55,12 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
   const [status, setStatus] = useState("idle");
 
   useEffect(() => {
-    if (!username || username.length < 3) {
+    if (!username) {
+      setStatus("idle");
+
+      return;
+    }
+    if (username.length > 0 && username.length < 3) {
       methods.setError("username" as const, {
         type: "manual",
         message: "Username must be at least 3 characters",
@@ -128,7 +133,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
     const valid = await methods.trigger(fields);
 
     if (valid) {
-      setCurrentStep((prev) => prev + 1);
+      type !== "login" && setCurrentStep((prev) => prev + 1);
     }
   };
 
@@ -426,7 +431,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
               )}
             </button> */}
             <FormButton
-              isLastStep={currentStep === 4}
+              isLastStep={type === "login" || currentStep === 4}
               isStepChange={currentStep < 4}
               loading={loading}
               label={
