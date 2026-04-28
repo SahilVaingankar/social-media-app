@@ -61,6 +61,11 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
+const emailValidation = z.email("Please enter a valid email");
+const passwordValidation = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
+
 export const signupSchema = z.object({
   username: z
     .string()
@@ -71,9 +76,9 @@ export const signupSchema = z.object({
       "Username can only contain letters, numbers, underscores, and dots",
     ),
 
-  email: z.email("Please enter a valid email"),
+  email: emailValidation,
 
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: passwordValidation,
 
   name: z
     .string()
@@ -107,11 +112,38 @@ export const signupSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.email("Please enter a valid email"),
+  email: emailValidation,
 
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: passwordValidation,
 });
+
+export const requestOtpSchema = z.object({
+  email: emailValidation,
+});
+
+export const verifyOtpSchema = z.object({
+  otp: z
+    .string()
+    .length(6, "OTP must be 6 digits")
+    .regex(/^[0-9]+$/, "OTP must contain only digits"),
+});
+
+export const resetPasswordSchema = z.object({
+  newPassword: passwordValidation,
+});
+
+// export const resetPasswordSchema = z.object({
+//   email: emailValidation,
+//   otp: z
+//     .string()
+//     .length(6, "OTP must be 6 characters")
+//     .regex(/^[0-9]+$/, "OTP must contain only digits"),
+//   newPassword: passwordValidation,
+// });
 
 // Optional (industry standard)
 export type SignupData = z.infer<typeof signupSchema>;
 export type LoginData = z.infer<typeof loginSchema>;
+export type RequestOtpData = z.infer<typeof requestOtpSchema>;
+export type VerifyOtpData = z.infer<typeof verifyOtpSchema>;
+export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;

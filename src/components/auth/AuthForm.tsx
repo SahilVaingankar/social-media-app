@@ -55,7 +55,12 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
   const [status, setStatus] = useState("idle");
 
   useEffect(() => {
-    if (!username || username.length < 3) {
+    if (!username) {
+      setStatus("idle");
+
+      return;
+    }
+    if (username.length > 0 && username.length < 3) {
       methods.setError("username" as const, {
         type: "manual",
         message: "Username must be at least 3 characters",
@@ -88,7 +93,15 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
         }
       } catch (err) {
         setStatus("idle");
-        setServerError("Server Error. Please try again.");
+        if (!navigator.onLine) {
+          const msg = "You're offline. Check your internet connection.";
+          setServerError(msg);
+          toast.error(msg);
+        } else {
+          const msg = "Something went wrong. Please try again.";
+          setServerError(msg);
+          toast.error(msg);
+        }
       }
     }, 500);
 
@@ -128,7 +141,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
     const valid = await methods.trigger(fields);
 
     if (valid) {
-      setCurrentStep((prev) => prev + 1);
+      type !== "login" && setCurrentStep((prev) => prev + 1);
     }
   };
 
@@ -173,8 +186,15 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
           : "Account created successfully!",
       );
     } catch (err: any) {
-      setServerError(err?.message || "An error occurred"); // ✅ keep catch
-      toast.error(err?.message || "An error occurred");
+      if (!navigator.onLine) {
+        const msg = "You're offline. Check your internet connection.";
+        setServerError(msg);
+        toast.error(msg);
+      } else {
+        const msg = "Something went wrong. Please try again.";
+        setServerError(msg);
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }
@@ -426,7 +446,7 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
               )}
             </button> */}
             <FormButton
-              isLastStep={currentStep === 4}
+              isLastStep={type === "login" || currentStep === 4}
               isStepChange={currentStep < 4}
               loading={loading}
               label={

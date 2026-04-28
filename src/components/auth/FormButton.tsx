@@ -1,4 +1,5 @@
 import { Loader } from "@/components/ui/Loader";
+import { log } from "util";
 
 interface FormButtonProps {
   isLastStep: boolean;
@@ -21,6 +22,7 @@ export function FormButton({
     <button
       type={isLastStep ? "submit" : "button"}
       onClick={(e) => {
+        console.log("clicked");
         if (isStepChange && onNext) {
           onNext();
         }

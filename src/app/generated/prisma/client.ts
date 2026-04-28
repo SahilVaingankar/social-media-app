@@ -56,6 +56,11 @@ export type User = Prisma.UserModel
  */
 export type Otp = Prisma.OtpModel
 /**
+ * Model AuthToken
+ * AUTH TOKEN TABLE
+ */
+export type AuthToken = Prisma.AuthTokenModel
+/**
  * Model Account
  * ======================
  *   ACCOUNT
