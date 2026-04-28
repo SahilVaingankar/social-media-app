@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Otp: 'Otp',
+  AuthToken: 'AuthToken',
   Account: 'Account',
   LoginActivity: 'LoginActivity',
   Session: 'Session',
@@ -92,7 +93,8 @@ export const UserScalarFieldEnum = {
   bio: 'bio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  lastActiveAt: 'lastActiveAt'
+  lastActiveAt: 'lastActiveAt',
+  otpBlockedUntil: 'otpBlockedUntil'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -103,12 +105,25 @@ export const OtpScalarFieldEnum = {
   userId: 'userId',
   codeHash: 'codeHash',
   type: 'type',
+  attempts: 'attempts',
   expiresAt: 'expiresAt',
   consumedAt: 'consumedAt',
   createdAt: 'createdAt'
 } as const
 
 export type OtpScalarFieldEnum = (typeof OtpScalarFieldEnum)[keyof typeof OtpScalarFieldEnum]
+
+
+export const AuthTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  type: 'type',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type AuthTokenScalarFieldEnum = (typeof AuthTokenScalarFieldEnum)[keyof typeof AuthTokenScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {

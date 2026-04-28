@@ -117,16 +117,33 @@ export const loginSchema = z.object({
   password: passwordValidation,
 });
 
-export const resetPasswordSchema = z.object({
+export const requestOtpSchema = z.object({
   email: emailValidation,
+});
+
+export const verifyOtpSchema = z.object({
   otp: z
     .string()
-    .length(6, "OTP must be 6 characters")
+    .length(6, "OTP must be 6 digits")
     .regex(/^[0-9]+$/, "OTP must contain only digits"),
+});
+
+export const resetPasswordSchema = z.object({
   newPassword: passwordValidation,
 });
+
+// export const resetPasswordSchema = z.object({
+//   email: emailValidation,
+//   otp: z
+//     .string()
+//     .length(6, "OTP must be 6 characters")
+//     .regex(/^[0-9]+$/, "OTP must contain only digits"),
+//   newPassword: passwordValidation,
+// });
 
 // Optional (industry standard)
 export type SignupData = z.infer<typeof signupSchema>;
 export type LoginData = z.infer<typeof loginSchema>;
+export type RequestOtpData = z.infer<typeof requestOtpSchema>;
+export type VerifyOtpData = z.infer<typeof verifyOtpSchema>;
 export type ResetPasswordData = z.infer<typeof resetPasswordSchema>;

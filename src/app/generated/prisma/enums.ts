@@ -17,6 +17,14 @@ export const OtpType = {
 export type OtpType = (typeof OtpType)[keyof typeof OtpType]
 
 
+export const tokenType = {
+  ACCOUNT_VERIFICATION: 'ACCOUNT_VERIFICATION',
+  PASSWORD_RESET: 'PASSWORD_RESET'
+} as const
+
+export type tokenType = (typeof tokenType)[keyof typeof tokenType]
+
+
 export const UserType = {
   NORMAL: 'NORMAL',
   PRO: 'PRO'

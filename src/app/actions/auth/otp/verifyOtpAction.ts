@@ -1,6 +1,8 @@
+"use server";
 import { prisma } from "@/lib/prisma";
 import crypto from "crypto";
 import { cookies } from "next/headers";
+import { verifyOtpSchema } from "@/lib/validators/auth";
 
 // Things to be careful about (you’ll likely run into these)
 // ❗ Don’t allow expired OTP
@@ -8,7 +10,15 @@ import { cookies } from "next/headers";
 // ❗ Always hash token before storing
 // ❗ Token should be long + random (not like OTP)
 
-export async function verifyOtpAction(email: string, otp: string) {
+export async function verifyOtpAction(email: string, body: unknown) {
+  const result = verifyOtpSchema.safeParse(body);
+
+  if (!result.success) {
+    return { success: false, message: result.error.issues[0].message };
+  }
+
+  const { otp } = result.data;
+
   // hash otp
   const codeHash = crypto.createHash("sha256").update(otp).digest("hex");
 
@@ -64,11 +74,22 @@ export async function verifyOtpAction(email: string, otp: string) {
         where: { id: latestOtp.id },
         data: { consumedAt: new Date() },
       }),
-      prisma.otp.create({
-        data: {
+      prisma.authToken.upsert({
+        where: {
+          userId_type: {
+            userId: latestOtp.userId,
+            type: "PASSWORD_RESET",
+          },
+        },
+        update: {
+          tokenHash: resetOtpTokenHash,
+          createdAt: new Date(),
+          expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        },
+        create: {
           userId: latestOtp.userId,
           type: "PASSWORD_RESET",
-          codeHash: resetOtpTokenHash,
+          tokenHash: resetOtpTokenHash,
           createdAt: new Date(),
           expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 mins expiry
         },
@@ -82,7 +103,8 @@ export async function verifyOtpAction(email: string, otp: string) {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 15 * 60,
+      maxAge: 15 * 60, // 15 mins
+      path: "/",
     });
 
     return { success: true, message: "OTP verified" };

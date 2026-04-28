@@ -93,7 +93,15 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
         }
       } catch (err) {
         setStatus("idle");
-        setServerError("Server Error. Please try again.");
+        if (!navigator.onLine) {
+          const msg = "You're offline. Check your internet connection.";
+          setServerError(msg);
+          toast.error(msg);
+        } else {
+          const msg = "Something went wrong. Please try again.";
+          setServerError(msg);
+          toast.error(msg);
+        }
       }
     }, 500);
 
@@ -178,8 +186,15 @@ export default function AuthForm({ type = "login" }: { type?: Type }) {
           : "Account created successfully!",
       );
     } catch (err: any) {
-      setServerError(err?.message || "An error occurred"); // ✅ keep catch
-      toast.error(err?.message || "An error occurred");
+      if (!navigator.onLine) {
+        const msg = "You're offline. Check your internet connection.";
+        setServerError(msg);
+        toast.error(msg);
+      } else {
+        const msg = "Something went wrong. Please try again.";
+        setServerError(msg);
+        toast.error(msg);
+      }
     } finally {
       setLoading(false);
     }

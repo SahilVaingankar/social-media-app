@@ -1,10 +1,21 @@
+"use server";
+
 import { PASSWORD_RESET_TEMPLATE } from "@/email/templates/reset-password";
 import { transporter } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import { hash, randomInt } from "crypto";
 import crypto from "crypto";
+import { requestOtpSchema } from "@/lib/validators/auth";
 
-export async function requestOtpAction(email: string) {
+export async function requestOtpAction(body: unknown) {
+  const result = requestOtpSchema.safeParse(body);
+
+  if (!result.success) {
+    return { success: false, message: result.error.issues[0].message };
+  }
+
+  const { email } = result.data;
+
   // generate random 6-digit otp
   const otp = randomInt(100000, 1000000).toString();
 
@@ -15,7 +26,7 @@ export async function requestOtpAction(email: string) {
     // fetch user data
     const user = await prisma.user.findUnique({
       where: { email },
-      select: { id: true, otpBlockedUntil: true, name: true },
+      select: { id: true, otpBlockedUntil: true, name: true, username: true },
     });
 
     // check if user exists
@@ -95,10 +106,10 @@ export async function requestOtpAction(email: string) {
         from: process.env.SENDER_EMAIL,
         to: email,
         subject: "Password Reset Request",
-        html: PASSWORD_RESET_TEMPLATE.replace("{{name}}", user.name).replace(
-          "{{otp}}",
-          otp,
-        ),
+        html: PASSWORD_RESET_TEMPLATE.replace(
+          "{{user}}",
+          user.username,
+        ).replace("{{otp}}", otp),
       })
       .catch(console.error);
 

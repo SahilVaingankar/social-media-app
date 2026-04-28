@@ -1,25 +1,46 @@
+// "use client"
+
 import { useEffect, useRef, useState } from "react";
 import AuthFormWrapper from "./AuthFormWrapper";
 import { FormButton } from "./FormButton";
-import { useFormContext } from "react-hook-form";
+import { useForm, useFormContext } from "react-hook-form";
+import { verifyOtpAction } from "@/app/actions/auth/otp/verifyOtpAction";
+import {
+  RequestOtpData,
+  VerifyOtpData,
+  verifyOtpSchema,
+} from "@/lib/validators/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import { requestOtpAction } from "@/app/actions/auth/otp/requestOtpAction";
 
-const OtpForm = () => {
-  const { setValue, register } = useFormContext();
-  const [isEmailSent, setIsEmailSent] = useState<boolean>(true);
-  const [otp, setOtp] = useState<string>("");
-  const [isOtpsubmited, setisOtpsubmited] = useState<boolean>(false);
+interface OtpFormProps {
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  email: string;
+}
+
+const OtpForm = ({ setCurrentStep, email }: OtpFormProps) => {
+  const [loading, setLoading] = useState(false);
+  // const { handleSubmit, setValue, getValues, register } = useFormContext();
+  const { handleSubmit, register, setValue } = useForm<VerifyOtpData>({
+    resolver: zodResolver(verifyOtpSchema),
+  }); // const emailInput = register("email" as const, {
+
+  const [shouldStartTimer, setShouldStartTimer] = useState<boolean>(true);
+  // const [otp, setOtp] = useState<string>("");
+  // const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [timer, setTimer] = useState<number>(120);
   useEffect(() => {
-    if (!isEmailSent) return;
+    if (!shouldStartTimer) return;
 
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
           // clearInterval(interval); // stop interval
-          setIsEmailSent(false); // reset flag
+          setShouldStartTimer(false); // reset flag
           return 0;
         }
         return prev - 1;
@@ -27,7 +48,7 @@ const OtpForm = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isEmailSent]);
+  }, [shouldStartTimer]);
   // const navigate = useNavigate();
 
   // const onSubmitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -38,7 +59,7 @@ const OtpForm = () => {
   //     });
   //     if (data.success) {
   //       toast.success(data.message);
-  //       setIsEmailSent(true);
+  //       setShouldStartTimer(true);
   //     } else {
   //       toast.error(data.message);
   //     }
@@ -47,13 +68,36 @@ const OtpForm = () => {
   //   }
   // };
 
-  const onSubmitOTP = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const otpArray = inputRefs.current.map((e) => e?.value).join("");
-    setOtp(otpArray);
-    setisOtpsubmited(true);
-  };
+  const onSubmitOtp = async (data: VerifyOtpData) => {
+    setLoading(true);
+    try {
+      // const finalData = {
+      //   ...data,
+      //   email,
+      // };
 
+      const res = await verifyOtpAction(email, data);
+      if (res.success) {
+        toast.success(res.message);
+        setCurrentStep(3);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      // toast.error("An error occurred while verifying OTP:", error);
+
+      if (!navigator.onLine) {
+        toast.error("You're offline. Check your internet connection.");
+      } else if (error?.message?.toLowerCase().includes("timeout")) {
+        toast.error("Request timed out. Please try again.");
+      } else {
+        // toast.error("Something went wrong. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   // const onSubmitNewPassword = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   try {
@@ -95,18 +139,55 @@ const OtpForm = () => {
   const handlePaste = (e: any) => {
     const paste = e.clipboardData.getData("text");
     const pasteArray = paste.split("");
-    pasteArray.forEach((char: string, index: number) => {
+    pasteArray.slice(0, 6).forEach((char: string, index: number) => {
       if (inputRefs.current[index]) {
         inputRefs.current[index].value = char;
       }
     });
+    const otpValue = pasteArray.join("").slice(0, 6);
+    setValue("otp", otpValue, { shouldValidate: true });
     inputRefs.current[
       Math.min(pasteArray.length, inputRefs.current.length) - 1
     ]?.focus();
   };
 
+  const handleResendOtp = async (email: RequestOtpData) => {
+    console.log("onSubmit running with data:", email);
+    try {
+      const res = await requestOtpAction(email);
+
+      if (res.success) {
+        inputRefs.current.forEach((input) => {
+          if (input) input.value = "";
+        });
+        inputRefs.current[0]?.focus();
+        setValue("otp", "");
+        setTimer(120); // 2 minutes
+        toast.success("OTP sent to your email");
+        if (!shouldStartTimer) {
+          setShouldStartTimer(true);
+        }
+        // (true);
+      } else {
+        // show error (toast or state)
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      if (!navigator.onLine) {
+        toast.error("You're offline. Check your internet connection.");
+      } else if (error?.message?.toLowerCase().includes("timeout")) {
+        toast.error("Request timed out. Please try again.");
+      } else {
+        // toast.error("Something went wrong. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
+
   return (
-    <div>
+    <form
+      onSubmit={handleSubmit(onSubmitOtp, (err) => console.log(err))}
+      className="">
       {/* <AuthFormWrapper> */}
       {/* <h2 className="text-2xl font-bold mb-4 text-center">Enter OTP</h2> */}
       <div className="space-y-4 px-4 ">
@@ -135,7 +216,7 @@ const OtpForm = () => {
                 />
               ))}
           </div> */}
-        <h1 className="text-white text-2xl font-semibold text-center mb-4">
+        <h1 className="text-white text-2xl font-semibold text-center mb-4 ">
           Reset Password OTP
         </h1>
         {/* <h1 className="text-2xl font-bold mb-4 text-center">
@@ -183,17 +264,21 @@ const OtpForm = () => {
             className="w-full bg-green-500 rounded-full text-white font-medium outline-none hover:bg-green-600 focus:bg-green-600">
             Verify Email
           </button> */}
-        <p className="text-green-500">Resend OTP</p>
-        {/* <FormButton
-          isLastStep={false}
+        <span
+          className="text-green-500 cursor-pointer hover:text-green-400 inline-block"
+          onClick={() => handleResendOtp({ email })}>
+          Resend OTP
+        </span>
+        <FormButton
+          isLastStep={true}
           isStepChange={false}
-          loading={false}
-          label="Verify Email"
+          loading={loading}
+          label="Verify OTP"
           loadingLabel="Verifying..."
-        /> */}
+        />
       </div>
       {/* </AuthFormWrapper> */}
-    </div>
+    </form>
   );
 };
 

@@ -10,6 +10,7 @@
  */
 export type * from './models/User'
 export type * from './models/Otp'
+export type * from './models/AuthToken'
 export type * from './models/Account'
 export type * from './models/LoginActivity'
 export type * from './models/Session'
